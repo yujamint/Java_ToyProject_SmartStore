@@ -7,16 +7,19 @@ import java.util.regex.Pattern;
 
 public class Customer {
     private final String customer_serialNo; // 자동생성
+    static int auto_id = 1;
+
     private String customer_name; // 3글자 이상
     private String customer_id; // 알파벳 + 숫자 + "_" , 5~12 글자 , 첫 글자는 알파벳
     private int customer_spentTime;
     private int customer_totalPayment;
-    private MemberGrade memberGrade;
+    private MemberGrade memberGrade = MemberGrade.GENERAL;
 
-    static int auto_id = 1;
+    private SmartStore smartStore = SmartStore.getInstance();
 
     public Customer() {
         customer_serialNo = String.format("%04d", auto_id++);
+        smartStore.addCustomer(this);
     }
 
     public String getCustomer_serialNo() {
@@ -85,8 +88,31 @@ public class Customer {
         return memberGrade;
     }
 
-    public void setMemberGrade(MemberGrade memberGrade) {
-        this.memberGrade = memberGrade;
+    public void setMemberGrade() {
+        int vip_time = smartStore.getVIP_time();
+        int vip_payment = smartStore.getVIP_payment();
+        int vvip_time = smartStore.getVVIP_time();
+        int vvip_payment = smartStore.getVVIP_payment();
+
+        if (customer_spentTime >= vvip_time && customer_totalPayment >= vvip_payment)
+            this.memberGrade = MemberGrade.VVIP;
+
+        else if (customer_spentTime >= vip_time && customer_totalPayment >= vip_payment)
+            this.memberGrade = MemberGrade.VIP;
+
+        else
+            this.memberGrade = MemberGrade.GENERAL;
     }
 
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customer_serialNo='" + customer_serialNo + '\'' +
+                ", customer_name='" + customer_name + '\'' +
+                ", customer_id='" + customer_id + '\'' +
+                ", customer_spentTime=" + customer_spentTime +
+                ", customer_totalPayment=" + customer_totalPayment +
+                ", memberGrade=" + memberGrade +
+                '}';
+    }
 }
