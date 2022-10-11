@@ -61,12 +61,12 @@ public class Main {
         smartStore.printCustomers();
         System.out.println("");
 
-        smartStore.sortByCustomerName();
+        smartStore.sortByCustomerName(false);
         System.out.println("");
 
-        smartStore.sortByCustomerSpentTIme();
+        smartStore.sortByCustomerSpentTIme(false);
         System.out.println("");
 
-        smartStore.sortByCustomerTotalPayment();
+        smartStore.sortByCustomerTotalPayment(false);
     }
 }

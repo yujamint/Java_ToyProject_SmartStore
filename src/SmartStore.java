@@ -59,29 +59,29 @@ public class SmartStore {
      */
 
     // 이름순 정렬
-    public void sortByCustomerName() {
+    public void sortByCustomerName(boolean isAscending) {
         Customer[] temp = new Customer[customerNum];
         System.arraycopy(customers, 0, temp, 0, customerNum);
 
-        Arrays.sort(temp, new CustomerNameComparator());
+        Arrays.sort(temp, new CustomerNameComparator(isAscending));
         printCustomers(temp);
     }
 
     // 총 이용시간순 정렬
-    public void sortByCustomerSpentTIme() {
+    public void sortByCustomerSpentTIme(boolean isAscending) {
         Customer[] temp = new Customer[customerNum];
         System.arraycopy(customers, 0, temp, 0, customerNum);
 
-        Arrays.sort(temp, new CustomerSpentTimeComparator());
+        Arrays.sort(temp, new CustomerSpentTimeComparator(isAscending));
         printCustomers(temp);
     }
 
     // 총 결제금액순 정렬
-    public void sortByCustomerTotalPayment() {
+    public void sortByCustomerTotalPayment(boolean isAscending) {
         Customer[] temp = new Customer[customerNum];
         System.arraycopy(customers, 0, temp, 0, customerNum);
 
-        Arrays.sort(temp, new CustomerTotalPaymentComparator());
+        Arrays.sort(temp, new CustomerTotalPaymentComparator(isAscending));
         printCustomers(temp);
     }
 
