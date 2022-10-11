@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class SmartStore {
     private Customer[] customers = new Customer[0];
@@ -21,6 +22,11 @@ public class SmartStore {
         return smartStore;
     }
 
+    /**
+     * 고객 추가,삭제
+     */
+
+    // 고객 추가
     public void addCustomer(Customer customer) {
         Customer[] temp = new Customer[++customerNum];
 
@@ -30,6 +36,7 @@ public class SmartStore {
         customers = temp;
     }
 
+    // 고객 삭제
     public void removeCustomer(Customer customer) {
         int removeIdx = 0;
         for (int i = 0; i < customerNum; i++) {
@@ -46,6 +53,50 @@ public class SmartStore {
 
         customer = null; // 객체 삭제
     }
+
+    /**
+     * 고객 목록 정렬, 출력
+     */
+
+    // 이름순 정렬
+    public void sortByCustomerName() {
+        Customer[] temp = new Customer[customerNum];
+        System.arraycopy(customers, 0, temp, 0, customerNum);
+
+        Arrays.sort(temp, new CustomerNameComparator());
+        printCustomers(temp);
+    }
+
+    // 총 이용시간순 정렬
+    public void sortByCustomerSpentTIme() {
+        Customer[] temp = new Customer[customerNum];
+        System.arraycopy(customers, 0, temp, 0, customerNum);
+
+        Arrays.sort(temp, new CustomerSpentTimeComparator());
+        printCustomers(temp);
+    }
+
+    // 총 결제금액순 정렬
+    public void sortByCustomerTotalPayment() {
+        Customer[] temp = new Customer[customerNum];
+        System.arraycopy(customers, 0, temp, 0, customerNum);
+
+        Arrays.sort(temp, new CustomerTotalPaymentComparator());
+        printCustomers(temp);
+    }
+
+    // 고객 목록 출력
+    public void printCustomers() {
+        for (Customer c : customers) System.out.println(c);
+    }
+
+    public void printCustomers(Customer[] customers) {
+        for (Customer c : customers) System.out.println(c);
+    }
+
+    /**
+     * getter, setter
+     */
 
     public Customer[] getCustomers() {
         return customers;
