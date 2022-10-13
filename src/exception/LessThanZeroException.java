@@ -1,11 +1,11 @@
 package exception;
 
-public class CustomerTotalPaymentFormatException extends CustomerException {
-    public CustomerTotalPaymentFormatException() {
+public class LessThanZeroException extends CustomerException {
+    public LessThanZeroException() {
 
     }
 
-    public CustomerTotalPaymentFormatException(String message) {
+    public LessThanZeroException(String message) {
         super(message);
     }
 }
