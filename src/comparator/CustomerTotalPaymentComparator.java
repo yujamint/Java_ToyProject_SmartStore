@@ -1,3 +1,5 @@
+package comparator;
+
 import customer.Customer;
 
 import java.util.Comparator;
@@ -5,8 +7,8 @@ import java.util.Comparator;
 public class CustomerTotalPaymentComparator implements Comparator<Customer> {
     int sign = 1;
 
-    public CustomerTotalPaymentComparator(boolean isAscending) {
-        if (!isAscending) sign = -1;
+    public CustomerTotalPaymentComparator(int isAscending) {
+        sign *= isAscending;
     }
 
     @Override
