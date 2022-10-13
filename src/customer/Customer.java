@@ -2,6 +2,9 @@ import exception.CustomerIDFormatException;
 import exception.CustomerNameFormatException;
 import exception.CustomerSpentTimeFormatException;
 import exception.CustomerTotalPaymentFormatException;
+import group.Group;
+import group.Groups;
+import group.MemberGrade;
 
 import java.util.regex.Pattern;
 
@@ -13,13 +16,17 @@ public class Customer {
     private String customer_id; // 알파벳 + 숫자 + "_" , 5~12 글자 , 첫 글자는 알파벳
     private int customer_spentTime;
     private int customer_totalPayment;
-    private MemberGrade memberGrade = MemberGrade.GENERAL;
+    private MemberGrade memberGrade = MemberGrade.NONE;
 
-    private SmartStore smartStore = SmartStore.getInstance();
+    private Customers customers = Customers.getInstance();
+    private Group[] groups = Groups.getInstance().getGroups();
 
     public Customer() {
         customer_serialNo = String.format("%04d", auto_id++);
-        smartStore.addCustomer(this);
+        customers.addCustomer(this);
+
+        int none_num = groups[0].getCustomer_num();
+        groups[0].setCustomer_num(none_num + 1);
     }
 
     public String getCustomer_serialNo() {
@@ -88,20 +95,43 @@ public class Customer {
         return memberGrade;
     }
 
+    public Group findGroup() {
+        for (int i = 0; i < 4; i++) {
+            if (groups[i].getGrade() == this.memberGrade) return groups[i];
+        }
+        return null;
+    }
+
     public void setMemberGrade() {
-        int vip_time = smartStore.getVIP_time();
-        int vip_payment = smartStore.getVIP_payment();
-        int vvip_time = smartStore.getVVIP_time();
-        int vvip_payment = smartStore.getVVIP_payment();
+        Group now_group = findGroup();
+        now_group.setCustomer_num(now_group.getCustomer_num() - 1);
 
-        if (customer_spentTime >= vvip_time && customer_totalPayment >= vvip_payment)
+        int general_time = groups[1].getParam().getSpentTime();
+        int general_payment = groups[1].getParam().getTotalPayment();
+        int vip_time = groups[2].getParam().getSpentTime();
+        int vip_payment = groups[2].getParam().getTotalPayment();
+        int vvip_time = groups[3].getParam().getSpentTime();
+        int vvip_payment = groups[3].getParam().getTotalPayment();
+
+        if (customer_spentTime >= vvip_time && customer_totalPayment >= vvip_payment) {
             this.memberGrade = MemberGrade.VVIP;
+            groups[3].setCustomer_num(groups[3].getCustomer_num() + 1);
+        }
 
-        else if (customer_spentTime >= vip_time && customer_totalPayment >= vip_payment)
+        else if (customer_spentTime >= vip_time && customer_totalPayment >= vip_payment) {
             this.memberGrade = MemberGrade.VIP;
+            groups[2].setCustomer_num(groups[2].getCustomer_num() + 1);
+        }
 
-        else
+        else if (customer_spentTime >= general_time && customer_totalPayment >= general_payment) {
             this.memberGrade = MemberGrade.GENERAL;
+            groups[1].setCustomer_num(groups[1].getCustomer_num() + 1);
+        }
+
+        else {
+            this.memberGrade = MemberGrade.NONE;
+            groups[0].setCustomer_num(groups[0].getCustomer_num() + 1);
+        }
     }
 
     @Override

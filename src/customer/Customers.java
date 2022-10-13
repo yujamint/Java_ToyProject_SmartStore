@@ -1,25 +1,22 @@
-import java.util.Arrays;
-import java.util.Comparator;
+import group.Group;
+import group.Groups;
 
-public class SmartStore {
+import java.util.Arrays;
+
+public class Customers {
     private Customer[] customers = new Customer[0];
 
     static int customerNum = 0;
+    Group[] groups = Groups.getInstance().getGroups();
 
-    private int VIP_time = Integer.MAX_VALUE;
-    private int VIP_payment = Integer.MAX_VALUE;
+    private static final Customers CUSTOMERS = new Customers();
 
-    private int VVIP_time = Integer.MAX_VALUE;
-    private int VVIP_payment = Integer.MAX_VALUE;
-
-    private static final SmartStore smartStore = new SmartStore();
-
-    private SmartStore() {
+    private Customers() {
 
     }
 
-    public static SmartStore getInstance() {
-        return smartStore;
+    public static Customers getInstance() {
+        return CUSTOMERS;
     }
 
     /**
@@ -64,7 +61,7 @@ public class SmartStore {
         System.arraycopy(customers, 0, temp, 0, customerNum);
 
         Arrays.sort(temp, new CustomerNameComparator(isAscending));
-        printCustomers(temp);
+        printCustomerSummary(temp);
     }
 
     // 총 이용시간순 정렬
@@ -73,7 +70,7 @@ public class SmartStore {
         System.arraycopy(customers, 0, temp, 0, customerNum);
 
         Arrays.sort(temp, new CustomerSpentTimeComparator(isAscending));
-        printCustomers(temp);
+        printCustomerSummary(temp);
     }
 
     // 총 결제금액순 정렬
@@ -82,7 +79,7 @@ public class SmartStore {
         System.arraycopy(customers, 0, temp, 0, customerNum);
 
         Arrays.sort(temp, new CustomerTotalPaymentComparator(isAscending));
-        printCustomers(temp);
+        printCustomerSummary(temp);
     }
 
     // 고객 목록 출력
@@ -90,8 +87,17 @@ public class SmartStore {
         for (Customer c : customers) System.out.println(c);
     }
 
-    public void printCustomers(Customer[] customers) {
-        for (Customer c : customers) System.out.println(c);
+    public void printCustomerSummary(Customer[] customers) {
+        for (Group group : groups) {
+            String label = group.getGrade().getLabel();
+            System.out.println("==============================");
+            System.out.println(label + " 그룹 : " + group.getCustomer_num() + "명");
+            System.out.println("[조건] " + group.getParam());
+            for (Customer customer : customers) {
+                if (customer.getMemberGrade() == group.getGrade()) System.out.println(customer);
+            }
+            System.out.println("");
+        }
     }
 
     /**
@@ -104,48 +110,6 @@ public class SmartStore {
 
     public void setCustomers(Customer[] customers) {
         this.customers = customers;
-    }
-
-    public int getVIP_time() {
-        return VIP_time;
-    }
-
-    public void setVIP_time(int VIP_time) {
-        this.VIP_time = VIP_time;
-    }
-
-    public int getVIP_payment() {
-        return VIP_payment;
-    }
-
-    public void setVIP_payment(int VIP_payment) {
-        this.VIP_payment = VIP_payment;
-    }
-
-    public int getVVIP_time() {
-        return VVIP_time;
-    }
-
-    public void setVVIP_time(int VVIP_time) {
-        this.VVIP_time = VVIP_time;
-    }
-
-    public int getVVIP_payment() {
-        return VVIP_payment;
-    }
-
-    public void setVVIP_payment(int VVIP_payment) {
-        this.VVIP_payment = VVIP_payment;
-    }
-
-    public void setVIP_timeAndPayment(int time, int payment) {
-        this.VIP_time = time;
-        this.VIP_payment = payment;
-    }
-
-    public void setVVIP_timeAndPayment(int time, int payment) {
-        this.VVIP_time = time;
-        this.VVIP_payment = payment;
     }
 
     public void setCustomers_memberGrade() {

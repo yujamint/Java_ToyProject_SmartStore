@@ -1,3 +1,5 @@
+import customer.Customer;
+
 import java.util.Comparator;
 
 public class CustomerNameComparator implements Comparator<Customer> {
