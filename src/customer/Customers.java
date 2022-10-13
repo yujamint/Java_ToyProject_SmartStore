@@ -1,3 +1,8 @@
+package customer;
+
+import comparator.CustomerNameComparator;
+import comparator.CustomerSpentTimeComparator;
+import comparator.CustomerTotalPaymentComparator;
 import group.Group;
 import group.Groups;
 
@@ -6,10 +11,11 @@ import java.util.Arrays;
 public class Customers {
     private Customer[] customers = new Customer[0];
 
-    static int customerNum = 0;
+    private static int customerNum = 0;
+
     Group[] groups = Groups.getInstance().getGroups();
 
-    private static final Customers CUSTOMERS = new Customers();
+    private static final Customers CUSTOMERS = new Customers(); // 싱글톤 패턴
 
     private Customers() {
 
@@ -48,6 +54,9 @@ public class Customers {
         System.arraycopy(customers, removeIdx + 1, temp, removeIdx, customers.length - removeIdx - 1);
         customers = temp;
 
+        Group group = groups[customer.getMemberGrade().getIndex()];
+        group.setCustomer_num(group.getCustomer_num() - 1);
+
         customer = null; // 객체 삭제
     }
 
@@ -56,7 +65,8 @@ public class Customers {
      */
 
     // 이름순 정렬
-    public void sortByCustomerName(boolean isAscending) {
+    public void sortByCustomerName(int isAscending) {
+        if (isAscending == 0) return;
         Customer[] temp = new Customer[customerNum];
         System.arraycopy(customers, 0, temp, 0, customerNum);
 
@@ -65,7 +75,8 @@ public class Customers {
     }
 
     // 총 이용시간순 정렬
-    public void sortByCustomerSpentTIme(boolean isAscending) {
+    public void sortByCustomerSpentTIme(int isAscending) {
+        if (isAscending == 0) return;
         Customer[] temp = new Customer[customerNum];
         System.arraycopy(customers, 0, temp, 0, customerNum);
 
@@ -74,7 +85,8 @@ public class Customers {
     }
 
     // 총 결제금액순 정렬
-    public void sortByCustomerTotalPayment(boolean isAscending) {
+    public void sortByCustomerTotalPayment(int isAscending) {
+        if (isAscending == 0) return;
         Customer[] temp = new Customer[customerNum];
         System.arraycopy(customers, 0, temp, 0, customerNum);
 
@@ -106,10 +118,6 @@ public class Customers {
 
     public Customer[] getCustomers() {
         return customers;
-    }
-
-    public void setCustomers(Customer[] customers) {
-        this.customers = customers;
     }
 
     public void setCustomers_memberGrade() {

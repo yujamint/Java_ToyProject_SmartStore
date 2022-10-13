@@ -1,7 +1,8 @@
+package customer;
+
 import exception.CustomerIDFormatException;
 import exception.CustomerNameFormatException;
-import exception.CustomerSpentTimeFormatException;
-import exception.CustomerTotalPaymentFormatException;
+import exception.LessThanZeroException;
 import group.Group;
 import group.Groups;
 import group.MemberGrade;
@@ -44,7 +45,7 @@ public class Customer {
             System.out.println("회원의 이름이 입력되었습니다.");
         }
         else {
-            throw new CustomerNameFormatException("잘못된 형식입니다. 정해진 이름 형식에 맞춰 다시 입력해주세요.");
+            throw new CustomerNameFormatException("잘못된 형식입니다. 정해진 이름 형식에 맞춰 다시 입력해주세요.\n");
         }
     }
 
@@ -59,7 +60,7 @@ public class Customer {
             System.out.println("회원의 ID가 입력되었습니다.");
         }
         else {
-            throw new CustomerIDFormatException("잘못된 형식입니다. 정해진 ID 형식에 맞춰 다시 입력해주세요.");
+            throw new CustomerIDFormatException("잘못된 형식입니다. 정해진 ID 형식에 맞춰 다시 입력해주세요.\n");
         }
     }
 
@@ -67,13 +68,13 @@ public class Customer {
         return customer_spentTime;
     }
 
-    public void setCustomer_spentTime(int customer_spentTime) throws CustomerSpentTimeFormatException {
+    public void setCustomer_spentTime(int customer_spentTime) throws LessThanZeroException {
         if (customer_spentTime >= 0) {
             this.customer_spentTime = customer_spentTime;
             System.out.println("회원의 사용시간이 입력되었습니다.");
         }
         else {
-            throw new CustomerSpentTimeFormatException("사용시간은 0 이상의 숫자만 입력 가능합니다.");
+            throw new LessThanZeroException("사용시간은 0 이상의 숫자만 입력 가능합니다.\n");
         }
     }
 
@@ -81,13 +82,13 @@ public class Customer {
         return customer_totalPayment;
     }
 
-    public void setCustomer_totalPayment(int customer_totalPayment) throws CustomerTotalPaymentFormatException {
+    public void setCustomer_totalPayment(int customer_totalPayment) throws LessThanZeroException {
         if (customer_totalPayment >= 0) {
             this.customer_totalPayment = customer_totalPayment;
             System.out.println("회원의 결제금액이 입력되었습니다.");
         }
         else {
-            throw new CustomerTotalPaymentFormatException("결제금액은 0 이상의 숫자만 입력 가능합니다.");
+            throw new LessThanZeroException("결제금액은 0 이상의 숫자만 입력 가능합니다.\n");
         }
     }
 
@@ -113,17 +114,17 @@ public class Customer {
         int vvip_time = groups[3].getParam().getSpentTime();
         int vvip_payment = groups[3].getParam().getTotalPayment();
 
-        if (customer_spentTime >= vvip_time && customer_totalPayment >= vvip_payment) {
-            this.memberGrade = MemberGrade.VVIP;
-            groups[3].setCustomer_num(groups[3].getCustomer_num() + 1);
+        if (groups[3].isInitialized() && customer_spentTime >= vvip_time && customer_totalPayment >= vvip_payment) {
+                this.memberGrade = MemberGrade.VVIP;
+                groups[3].setCustomer_num(groups[3].getCustomer_num() + 1);
         }
 
-        else if (customer_spentTime >= vip_time && customer_totalPayment >= vip_payment) {
+        else if (groups[2].isInitialized() && customer_spentTime >= vip_time && customer_totalPayment >= vip_payment) {
             this.memberGrade = MemberGrade.VIP;
             groups[2].setCustomer_num(groups[2].getCustomer_num() + 1);
         }
 
-        else if (customer_spentTime >= general_time && customer_totalPayment >= general_payment) {
+        else if (groups[1].isInitialized() && customer_spentTime >= general_time && customer_totalPayment >= general_payment) {
             this.memberGrade = MemberGrade.GENERAL;
             groups[1].setCustomer_num(groups[1].getCustomer_num() + 1);
         }
